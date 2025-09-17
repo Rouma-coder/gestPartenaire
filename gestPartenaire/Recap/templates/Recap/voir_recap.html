@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5 d-flex justify-content-center">
+    <div class="w-100" style="max-width: 900px;">
+
+        <!-- Bouton retour -->
+        <div class="mb-3">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Retour au Dashboard
+            </a>
+        </div>
+
+        <!-- Card principale -->
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+
+                <!-- Header bleu pro -->
+                <div class="bg-primary text-white p-4 rounded-top">
+                    <div class="row align-items-center">
+                        <!-- Colonne gauche : FADCO -->
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            <h4 class="fw-bold mb-1">FADCO</h4>
+                            <small>BOULEVARD DES ARMEES</small><br>
+                            <small>IFU: 3201641478415 | 072 BP 297 / COTONOU</small><br>
+                            <small>TEL: 0197485193</small>
+                        </div>
+
+                        <!-- Colonne droite : Récap -->
+                        <div class="col-md-6 text-center text-md-end">
+                            <h3 class="fw-bold mb-1">Récapitulatif des Commissions</h3>
+                            <small>{{ mois|date:"F Y" }} - Généré le {{ date_gen|date:"d/m/Y" }}</small><br>
+                            <small>Partenaire : {{ partenaire.nomdist }} ({{ partenaire.numdist }})</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenu du récap -->
+                <div class="p-4">
+                    <!-- Commission activités normales -->
+                    <h5 class="text-primary fw-bold border-bottom pb-1">Commission relative aux recrutements & réabonnements</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-striped table-bordered text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Total HT</th>
+                                    <th>Commission (4%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ total_ht|floatformat:2 }} FCFA</td>
+                                    <td>{{ commission_totale|floatformat:2 }} FCFA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Commission CREAT Terminal -->
+                    <h5 class="text-primary fw-bold border-bottom pb-1">Commission relative sur matériel (CREAT Terminal)</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-striped table-bordered text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Taux</th>
+                                    <th>Quantité</th>
+                                    <th>Commission totale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Terminal 1000</td>
+                                    <td>1977 FCFA</td>
+                                    <td>{{ nb_terminal_1000 }}</td>
+                                    <td>{{ commission_terminal_1000|floatformat:2 }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <td>Terminal 5000</td>
+                                    <td>2260 FCFA</td>
+                                    <td>{{ nb_terminal_5000 }}</td>
+                                    <td>{{ commission_terminal_5000|floatformat:2 }} FCFA</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-secondary fw-bold">
+                                    <td colspan="3">Total Commission Matériel</td>
+                                    <td>{{ total_commission_terminal|floatformat:2 }} FCFA</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Échange payant -->
+                    <h5 class="text-primary fw-bold border-bottom pb-1">Nombre d'échanges payants</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-striped table-bordered text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Opérations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ nb_echange_payant }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total général -->
+                    <div class="alert alert-primary text-end fw-bold fs-5 mb-4">
+                        Total Commissions : {{ total_commission|floatformat:2 }} FCFA
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <a href="{{ recap.fichier_pdf.url }}" class="btn btn-primary">
+                            <i class="bi bi-download"></i> Télécharger PDF
+                        </a>
+                    </div>
+
+                    <!-- Signature -->
+                    <div class="text-center text-muted small">
+                        Document généré automatiquement - {{ date_gen|date:"d/m/Y" }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

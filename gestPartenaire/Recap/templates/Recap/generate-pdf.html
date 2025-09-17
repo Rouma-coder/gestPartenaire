@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Récapitulatif {{ mois }}</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .header {
+            background-color: #004085;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        .header small {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .entreprise {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .section {
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid #004085;
+            margin-bottom: 10px;
+            padding-bottom: 3px;
+            color: #004085;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #333;
+            text-align: left;
+            padding: 8px;
+        }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        tfoot td {
+            font-weight: bold;
+            background-color: #f1f3f5;
+        }
+        .totals {
+            background-color: #004085;
+            color: white;
+            padding: 10px;
+            text-align: right;
+            font-size: 16px;
+        }
+        .signature {
+            margin-top: 50px;
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- En-tête -->
+    <div class="header">
+        <h1>Récapitulatif des Commissions</h1>
+        <small>{{ mois }} - Généré le {{ date_gen|date:"d/m/Y" }}</small><br>
+        <small>Partenaire : {{ partenaire.nomdist }} ({{ partenaire.numdist }})</small>
+    </div>
+
+    <!-- Informations Entreprise -->
+    <div class="entreprise">
+        <strong>{{ entreprise_nom }}</strong><br>
+        {{ entreprise_adresse }}<br>
+        IFU: {{ entreprise_ifu }} | {{ entreprise_bp }}<br>
+        Tel: {{ entreprise_tel }}
+    </div>
+
+    <!-- Commission Activités normales -->
+    <div class="section">
+        <div class="section-title">Commission relative aux recrutements & réabonnements</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Total HT</th>
+                    <th>Commission (4%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ total_ht|floatformat:2 }} FCFA</td>
+                    <td>{{ commission_totale|floatformat:2 }} FCFA</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Commission CREAT Terminal -->
+    <div class="section">
+        <div class="section-title">Commission relative sur matériel (CREAT Terminal)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Taux</th>
+                    <th>Quantité</th>
+                    <th>Commission totale</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Terminal 1000</td>
+                    <td>1977 FCFA</td>
+                    <td>{{ nb_terminal_1000 }}</td>
+                    <td>{{ commission_terminal_1000|floatformat:2 }} FCFA</td>
+                </tr>
+                <tr>
+                    <td>Terminal 5000</td>
+                    <td>2260 FCFA</td>
+                    <td>{{ nb_terminal_5000 }}</td>
+                    <td>{{ commission_terminal_5000|floatformat:2 }} FCFA</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Total Commission Matériel</td>
+                    <td>{{ total_commission_terminal|floatformat:2 }} FCFA</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Échange payant -->
+    <div class="section">
+        <div class="section-title">Nombre d'échanges payants</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Opérations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ nb_echange_payant }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Total général -->
+    <div class="totals">
+        Total Commissions : {{ total_commission|floatformat:2 }} FCFA
+    </div>
+
+    <!-- Signature -->
+    <div class="signature">
+        Document généré automatiquement - {{ date_gen|date:"d/m/Y" }}
+    </div>
+
+</body>
+</html>

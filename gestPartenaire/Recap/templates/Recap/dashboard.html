@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="fw-bold fs-3 mb-1">
+                👋 Bienvenue {{ nom }} 
+                <small class="text-muted fs-6">({{ numero }})</small>
+            </h1>
+            <h5 class="text-primary fs-5">Tableau de bord – {{ periode_titre }}</h5>
+        </div>
+        <div class="d-flex flex-column flex-md-row gap-2 mt-3 mt-md-0">
+            <a href="{% url 'mes_recaps' %}" class="btn btn-primary btn-lg shadow-sm rounded-pill">
+                📄 Mes Récapitulatifs
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <form method="get" class="row g-3 mb-4 p-3 border rounded-3 bg-light shadow-sm">
+        <div class="col-md-5">
+            <label for="date_debut" class="form-label fw-semibold">Du :</label>
+            <input type="date" name="date_debut" id="date_debut" class="form-control shadow-sm" value="{{ date_debut }}">
+        </div>
+        <div class="col-md-5">
+            <label for="date_fin" class="form-label fw-semibold">Au :</label>
+            <input type="date" name="date_fin" id="date_fin" class="form-control shadow-sm" value="{{ date_fin }}">
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100 shadow-sm">Filtrer</button>
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100 shadow-sm">Reset</a>
+        </div>
+    </form>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-lg border-0 text-center p-3 hover-card">
+                <i class="bi bi-currency-dollar fs-2 text-primary"></i>
+                <div class="text-muted small">Montant TTC</div>
+                <div class="h5 fw-bold text-primary">{{ total_ttc|floatformat:2 }} FCFA</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-lg border-0 text-center p-3 hover-card">
+                <i class="bi bi-currency-dollar fs-2 text-primary"></i>
+                <div class="text-muted small">Montant HT</div>
+                <div class="h5 fw-bold text-primary">{{ total_ht|floatformat:2 }} FCFA</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-lg border-0 text-center p-3 hover-card">
+                <i class="bi bi-percent fs-2 text-success"></i>
+                <div class="text-muted small">Commission 4%</div>
+                <div class="h5 fw-bold text-success">{{ commission_totale|floatformat:2 }} FCFA</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-lg border-0 text-center p-3 hover-card">
+                <i class="bi bi-arrow-repeat fs-2 text-warning"></i>
+                <div class="text-muted small">Échanges Payants</div>
+                <div class="h5 fw-bold text-warning">{{ nb_echange_payant }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminals Table -->
+    <div class="card mb-4 shadow-lg rounded-3">
+        <div class="card-header bg-info text-white fw-bold">Statistiques Terminaux</div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle text-center mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>Type</th>
+                        <th>Taux</th>
+                        <th>Quantité</th>
+                        <th>Commissiont</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Terminal 1000</td>
+                        <td>1977 FCFA</td>
+                        <td>{{ nb_terminal_1000 }}</td>
+                        <td>{{ commission_terminal_1000|floatformat:2 }} FCFA</td>
+                    </tr>
+                    <tr>
+                        <td>Terminal 5000</td>
+                        <td>2260 FCFA</td>
+                        <td>{{ nb_terminal_5000 }}</td>
+                        <td>{{ commission_terminal_5000|floatformat:2 }} FCFA</td>
+                    </tr>
+                </tbody>
+                <tfoot class="table-success fw-bold">
+                    <tr>
+                        <td colspan="2">Total</td>
+                        <td>{{ nb_terminal_1000|add:nb_terminal_5000 }}</td>
+                        <td>{{ commission_terminal_1000|add:commission_terminal_5000|floatformat:2 }} FCFA</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Activités par jour -->
+    {% if activites_par_jour %}
+        {% for jour, activites in activites_par_jour.items %}
+            <div class="card mb-4 shadow-lg rounded-3">
+                <div class="card-header bg-dark text-white fw-bold">
+                    📅 Activités du {{ jour|date:"d/m/Y" }}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle text-center mb-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mouvement</th>
+                                <th>Montant TTC</th>
+                                <th>Montant HT</th>
+                                <th>Article</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activite in activites %}
+                            <tr>
+                                <td>{{ activite.cmouvmt }}</td>
+                                <td>{{ activite.montant_ttc|floatformat:2 }} FCFA</td>
+                                <td>{{ activite.montant_ht|floatformat:2 }} FCFA</td>
+                                <td>{{ activite.article }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center shadow-sm rounded-3">
+            Aucune activité trouvée pour cette période.
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.hover-card {
+    transition: all 0.2s ease-in-out;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+</style>
+{% endblock %}
